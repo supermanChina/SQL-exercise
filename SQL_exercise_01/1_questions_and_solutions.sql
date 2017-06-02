@@ -2,43 +2,45 @@
 
 
 -- 1.1 Select the names of all the products in the store.
-select Name from Products;
+SELECT NAME FROM Products;
 
 -- 1.2 Select the names and the prices of all the products in the store.
-select name, price from products;
+SELECT NAME, price FROM products;
 
 -- 1.3 Select the name of the products with a price less than or equal to $200.
-select name from products where price <= 200;
+SELECT NAME FROM products WHERE price <= 200;
 
 
 -- 1.4 Select all the products with a price between $60 and $120.
-select * from products where price between 60 and 120;
-select * from products where price >= 60 and price <= 120;
+SELECT * FROM products WHERE price BETWEEN 60 AND 120;
+SELECT * FROM products WHERE price >= 60 AND price <= 120;
 
 -- 1.5 Select the name and price in cents (i.e., the price must be multiplied by 100).
-select name, price*100 from products;
+SELECT NAME, price*100 FROM products;
 
-select name, concat(price*100, ' cents') from products;
+SELECT NAME, CONCAT(price*100, ' cents') FROM products;
 
 -- 1.6 Compute the average price of all the products.
-select avg(price) from products;
-select sum(price)/count(price) from products;
+SELECT AVG(price) FROM products;
+SELECT SUM(price)/COUNT(price) avg_price FROM products;
  
 -- 1.7 Compute the average price of all products with manufacturer code equal to 2.
-select avg(price) from products where  Manufacturer = 2;
+SELECT AVG(price) FROM products WHERE  Manufacturer = 2;
 
 -- 1.8 Compute the number of products with a price larger than or equal to $180.
-select count(*) from products where price>=180;
+SELECT COUNT(*) FROM products WHERE price>=180;
 
 -- 1.9 Select the name and price of all products with a price larger than or equal to $180, and sort first by price (in descending order), and then by name (in ascending order).
-select name, price from products where price>=180 order by price desc, name asc;
+SELECT NAME, price FROM products WHERE price>=180 ORDER BY price DESC, NAME ASC;
 
 -- 1.10 Select all the data from the products, including all the data for each product's manufacturer.
-select a.*, b.name from products a join Manufacturers b on(a.manufacturer = b.code);
-select a.*, b.name from products a, Manufacturers b where a.manufacturer = b.code;
+-- join
+SELECT a.*, b.name FROM products a JOIN Manufacturers b ON(a.manufacturer = b.code) ORDER BY a.code;
+-- where condition
+SELECT a.*, b.name FROM products a, Manufacturers b WHERE a.manufacturer = b.code ORDER BY a.`Code`;
 
 -- 1.11 Select the product name, price, and manufacturer name of all the products.
-select a.name, a.price, b.name from products a join Manufacturers b on(a.manufacturer = b.code);
+SELECT a.name, a.price, b.name FROM products a JOIN Manufacturers b ON(a.manufacturer = b.code AND a.price > 100) ORDER BY a.name;
 
 SELECT Products.Name, Price, Manufacturers.Name
    FROM Products INNER JOIN Manufacturers
@@ -51,18 +53,18 @@ GROUP BY Manufacturer;
 
 
 -- 1.13 Select the average price of each manufacturer's products, showing the manufacturer's name.
-select avg(a.price), b.name 
-from Products a join Manufacturers b 
-on a.manufacturer = b.code
-group by b.name;
+SELECT AVG(a.price), b.name 
+FROM Products a JOIN Manufacturers b 
+ON a.manufacturer = b.code
+GROUP BY b.name;
 
 
 -- 1.14 Select the names of manufacturer whose products have an average price larger than or equal to $150.
-select avg(a.price), b.name 
-from Manufacturers b join Products a 
-on b.code = a.Manufacturer
-group by b.name
-having avg(a.price)>=150;
+SELECT AVG(a.price), b.name 
+FROM Manufacturers b JOIN Products a 
+ON b.code = a.Manufacturer
+GROUP BY b.name
+HAVING AVG(a.price)>=150;
 
 SELECT AVG(Price), Manufacturers.Name
    FROM Products, Manufacturers
@@ -72,20 +74,22 @@ SELECT AVG(Price), Manufacturers.Name
    
    
 -- 1.15 Select the name and price of the cheapest product.
-select name, price from Products 
-where price = (
-select min(price)
-from products);
+-- sub select the min price then use where condtion to select
+SELECT NAME, price FROM Products 
+WHERE price = (
+SELECT MIN(price)
+FROM products);
 
-SELECT name,price
+-- sort then limit the first result
+SELECT NAME,price
   FROM Products
   ORDER BY price ASC
   LIMIT 1;
 
 -- 1.16 Select the name of each manufacturer along with the name and price of its most expensive product.
-select a.Name, max(a.price), b.Name
-from Manufacturers b join Products a 
-on a.Manufacturer = b.code
+SELECT a.Name, MAX(a.price), b.Name
+FROM Manufacturers b JOIN Products a 
+ON a.Manufacturer = b.code
 group by b.name;
 
 
